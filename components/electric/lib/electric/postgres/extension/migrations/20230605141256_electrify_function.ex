@@ -52,12 +52,12 @@ defmodule Electric.Postgres.Extension.Migrations.Migration_20230605141256_Electr
       );
       """,
       Extension.add_table_to_publication_sql(electrified_tracking_table),
-      electrify_function,
-      """
-      CREATE EVENT TRIGGER #{event_triggers[:sql_drop]} ON sql_drop
-          WHEN TAG IN (#{Enum.join(event_trigger_tags, ", ")})
-          EXECUTE FUNCTION #{schema}.ddlx_sql_drop_handler();
-      """
+      electrify_function
+      # """
+      # CREATE EVENT TRIGGER #{event_triggers[:sql_drop]} ON sql_drop
+      #     WHEN TAG IN (#{Enum.join(event_trigger_tags, ", ")}) 
+      #     EXECUTE FUNCTION #{schema}.ddlx_sql_drop_handler();
+      # """
     ]
   end
 
