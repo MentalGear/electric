@@ -260,16 +260,16 @@ defmodule Electric.Postgres.Extension do
   def create_table_ddl(conn, %Proto.RangeVar{} = table_name) do
     name = to_string(table_name)
 
-    ddlx_create(conn, name, "ddlx_create")
+    ddlgen_create(conn, name, "ddlgen_create")
   end
 
   def create_index_ddl(conn, %Proto.RangeVar{} = table_name, index_name) do
     name = to_string(%{table_name | name: index_name})
 
-    ddlx_create(conn, name, "ddlx_create")
+    ddlgen_create(conn, name, "ddlgen_create")
   end
 
-  defp ddlx_create(conn, name, function) do
+  defp ddlgen_create(conn, name, function) do
     query = "SELECT #{@schema}.#{function}($1::regclass)"
 
     with {:ok, _cols, [{ddl}]} <- :epgsql.equery(conn, query, [name]) do
@@ -293,7 +293,7 @@ defmodule Electric.Postgres.Extension do
 
     [
       Migrations.Migration_20230328113927,
-      Migrations.Migration_20230424154425_DDLX,
+      Migrations.Migration_20230424154425_DDLGen,
       Migrations.Migration_20230512000000_conflict_resolution_triggers,
       Migrations.Migration_20230605141256_ElectrifyFunction,
       Migrations.Migration_20230715000000_UtilitiesTable,
@@ -344,7 +344,7 @@ defmodule Electric.Postgres.Extension do
             Logger.info("Running extension migration: #{version}")
 
             for sql <- module.up(@schema) do
-              # IO.puts("-- ===============\n" <> sql <> "\n-- ===============")
+              IO.puts("-- ===============\n" <> sql <> "\n-- ===============")
 
               case :epgsql.squery(txconn, sql) do
                 results when is_list(results) ->
