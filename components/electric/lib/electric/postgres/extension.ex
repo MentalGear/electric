@@ -348,7 +348,7 @@ defmodule Electric.Postgres.Extension do
             Logger.info("Running extension migration: #{version}")
 
             for sql <- module.up(@schema) do
-              IO.puts("-- ===============\n" <> sql <> "\n-- ===============")
+              # IO.puts("-- ===============\n" <> sql <> "\n-- ===============")
 
               case :epgsql.squery(txconn, sql) do
                 results when is_list(results) ->
