@@ -16,7 +16,7 @@ defmodule Electric.Postgres.Extension.Migrations.Migration_20230918115714_DDLCom
       """
       ALTER TABLE #{ddl_table}
         ADD CONSTRAINT ddl_table_unique_migrations
-        UNIQUE (txid, txts ,version, query); 
+        UNIQUE (txid, txts, query); 
       """,
       """
       CREATE OR REPLACE FUNCTION #{schema}.create_active_migration(
