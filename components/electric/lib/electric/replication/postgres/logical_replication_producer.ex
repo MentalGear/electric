@@ -161,6 +161,8 @@ defmodule Electric.Replication.Postgres.LogicalReplicationProducer do
       publication: state.publication
     }
 
+    IO.inspect(tx, label: :current_transaction)
+
     {:noreply, [], %{state | transaction: {msg.final_lsn, tx}}}
   end
 
@@ -227,8 +229,12 @@ defmodule Electric.Replication.Postgres.LogicalReplicationProducer do
   defp process_message(%Update{} = msg, %State{} = state) do
     relation = Map.get(state.relations, msg.relation_id)
 
-    old_data = data_tuple_to_map(relation.columns, msg.old_tuple_data)
-    data = data_tuple_to_map(relation.columns, msg.tuple_data)
+    IO.inspect(msg, label: :update_msg)
+
+    old_data =
+      data_tuple_to_map(relation.columns, msg.old_tuple_data) |> IO.inspect(label: :old_data)
+
+    data = data_tuple_to_map(relation.columns, msg.tuple_data) |> IO.inspect(label: :data)
 
     updated_record = %UpdatedRecord{
       relation: {relation.namespace, relation.name},
