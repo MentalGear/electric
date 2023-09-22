@@ -43,7 +43,7 @@ defmodule Electric.Postgres.Extension.Functions do
   """
   @spec after_migrations :: function_list
   def after_migrations do
-    for {name, args} <- [] do
+    for {name, args} <- [{"perform_reordered_op_installer_function", []}] do
       {name, by_name(name, args)}
     end
   end
